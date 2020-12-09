@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace AntColonyOptimization {
+namespace MetaheuristicAlgorithms {
   class Ant {
-    private Graph graph;
+    private ACOGraph graph;
     private List<int> visitedCities { get; set; }
 
     int startCity;
     int lastCity;
-    int currentPath;
 
-    public Ant(Graph graph) {
+    public Ant(ACOGraph graph) {
       this.graph = graph;
       this.visitedCities = new List<int>();
 
@@ -21,33 +20,25 @@ namespace AntColonyOptimization {
       for (int i = 0; i < graph.size - 1; ++i) {
         NextCity();
       }
+
+      if (graph.CalculatePathDistance(visitedCities) <
+          graph.CalculatePathDistance(graph.cities)) {
+        graph.cities = new List<int>(visitedCities);
+      }
+
+      ClearCycle();
     }
 
     private void NextCity() {
       int city = SelectNextCity();
-      int distance = graph.Edge(lastCity, city).distance;
+      int distance = graph.DistanceEdge(lastCity, city).distance;
 
       visitedCities.Add(city);
 
-      graph.Edge(lastCity, city).pheromonesConcentration += graph.q /distance;
+      graph.PheromonesEdge(lastCity, city).pheromonesConcentration +=
+        graph.q /distance;
 
-      currentPath += distance;
-      lastCity = city;
-
-      if (visitedCities.Count != graph.size) {
-        return;
-      }      
-
-      currentPath += graph.Edge(lastCity, startCity).distance;
-
-      visitedCities.Add(startCity);
-
-      if (graph.shortestPath > currentPath) {
-        graph.shortestPath = currentPath;
-        graph.cities = visitedCities.ToArray();
-      }
-
-      ClearCycle();
+      lastCity = city;   
     }
 
     private int SelectNextCity() {
@@ -55,8 +46,8 @@ namespace AntColonyOptimization {
       // probibility of choosing of the city;
       double p = 0.0;
 
-      foreach (var currentCity in graph.cities) {
-        if (WasCityVisited(currentCity)) {
+      for (int currentCity = 0; currentCity < graph.size; ++currentCity) {
+        if (visitedCities.Contains(currentCity)) {
           continue;
         }
 
@@ -74,16 +65,12 @@ namespace AntColonyOptimization {
       return city;
     }
 
-    private bool WasCityVisited(int city) {
-      return visitedCities.Contains(city);
-    }
-
     private double CountProbabilityNumerator(int city)
     {
       double pheromonesConcentration = 
-        graph.Edge(lastCity, city).pheromonesConcentration;
+        graph.PheromonesEdge(lastCity, city).pheromonesConcentration;
       // value of the local criterion function
-      double eta = 1.0 / graph.Edge(lastCity, city).distance;
+      double eta = 1.0 / graph.DistanceEdge(lastCity, city).distance;
 
       double probabilityNumerator = 
         Math.Pow(pheromonesConcentration, graph.alpha) * 
@@ -95,12 +82,12 @@ namespace AntColonyOptimization {
     private double CountProbabilityDenumerator() {
       double probabilityDenumerator = 0;
 
-      foreach (var city in graph.cities) {
-        if (WasCityVisited(city)) {
+      for (int city = 0; city < graph.size; ++city) {
+        if (visitedCities.Contains(city)) {
           continue;
         }
 
-        var distance = graph.Edge(lastCity, city).distance;
+        var distance = graph.DistanceEdge(lastCity, city).distance;
 
         probabilityDenumerator += 
           Math.Pow(distance, graph.alpha) * 
@@ -109,11 +96,10 @@ namespace AntColonyOptimization {
 
       return probabilityDenumerator;
     }
-  
+
     private void ClearCycle() {
       Random random = new Random();
 
-      currentPath = 0;
       startCity = random.Next(graph.size);
       lastCity = startCity;
       visitedCities.Clear();

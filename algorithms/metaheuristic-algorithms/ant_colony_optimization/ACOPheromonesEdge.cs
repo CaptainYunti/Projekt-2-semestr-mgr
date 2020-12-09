@@ -1,14 +1,13 @@
-namespace AntColonyOptimization {
-  class Edge {
+namespace MetaheuristicAlgorithms {
+  class ACOPheromonesEdge {
+    
     public double pheromonesConcentration { get; set; }
-    public int distance { get; set; }
 
-    public Edge(double pheromonesConcentration, int distance) {
+    public ACOPheromonesEdge(double pheromonesConcentration) {
       this.pheromonesConcentration = pheromonesConcentration;
-      this.distance = distance;
     }
 
-    public void UpdatePheromonesConcentration(double rho) {
+    public void UpdatePheromonesConcentration(double rho, int distance) {
       double tau = pheromonesConcentration / distance;
 
       pheromonesConcentration = rho * pheromonesConcentration + tau;

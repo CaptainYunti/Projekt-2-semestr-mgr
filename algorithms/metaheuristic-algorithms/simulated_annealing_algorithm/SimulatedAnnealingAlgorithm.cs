@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace SimulatedAnnealingAlgorithm {
+namespace MetaheuristicAlgorithms {
   class SimulatedAnnealingAlgorithm {
-    private Graph graph; 
+    private SAGraph graph; 
 
     // temperature value
     public double T = 10000.0;
@@ -21,7 +21,7 @@ namespace SimulatedAnnealingAlgorithm {
     public void Start() {
       lastPermutation = GetRandomPermutation();
 
-      graph.cities = lastPermutation;
+      graph.cities = new List<int>(lastPermutation);
 
       for (int i = 0; i < iterationsNumber; ++i) {
         DoInternalIterations();
@@ -32,7 +32,7 @@ namespace SimulatedAnnealingAlgorithm {
     }
 
     public void LoadGraph(string path) {
-      graph = new Graph();
+      graph = new SAGraph();
 
       graph.Load(path);
     }
@@ -49,7 +49,7 @@ namespace SimulatedAnnealingAlgorithm {
         if (ShouldChangeSolution(delta)) {
           lastPermutation = adjacentPermutation;
 
-          graph.cities = lastPermutation;
+          graph.cities = new List<int>(lastPermutation);
         }
       }
     }

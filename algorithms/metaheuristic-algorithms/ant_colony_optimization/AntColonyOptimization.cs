@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace AntColonyOptimization {
+namespace MetaheuristicAlgorithms {
   class AntColonyOptimization {
-    private Graph graph; 
+    private ACOGraph graph; 
     private List<Ant> ants;
 
     private int iterationsNumber = 200;
@@ -12,7 +12,7 @@ namespace AntColonyOptimization {
     }
 
     public void LoadGraph(string path) {
-      graph = new Graph();
+      graph = new ACOGraph();
 
       graph.Load(path);
 
@@ -38,7 +38,10 @@ namespace AntColonyOptimization {
 
     private void UpdatePheromonoesConcentration() {
       for (int i = 0; i < graph.size - 1; ++i) {
-        graph.Edge(i, i + 1).UpdatePheromonesConcentration(graph.rho);
+        var distance = graph.DistanceEdge(i, i + 1).distance;
+
+        graph.PheromonesEdge(i, i + 1).UpdatePheromonesConcentration(graph.rho,
+                                                                     distance);
       }
     }
   }
