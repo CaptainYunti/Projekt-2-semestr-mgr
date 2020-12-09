@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace MetaheuristicAlgorithms {
+namespace Algorithms {
   class AntColonyOptimization {
     private ACOGraph graph; 
     private List<Ant> ants;
 
-    private int iterationsNumber = 200;
+    private int iterationsNumber = 500;
 
     public AntColonyOptimization() {
       ants = new List<Ant>();

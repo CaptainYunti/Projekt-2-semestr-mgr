@@ -1,9 +1,9 @@
-namespace MetaheuristicAlgorithms {
-  class ACOPheromonesEdge {
+namespace Algorithms {
+  class PheromonesEdge {
     
     public double pheromonesConcentration { get; set; }
 
-    public ACOPheromonesEdge(double pheromonesConcentration) {
+    public PheromonesEdge(double pheromonesConcentration) {
       this.pheromonesConcentration = pheromonesConcentration;
     }
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace MetaheuristicAlgorithms {
+namespace Algorithms {
   class ACOGraph : Graph {
     // pheromones evaporation factor
     public double rho { get; } = 0.5;
@@ -15,14 +15,14 @@ namespace MetaheuristicAlgorithms {
     // number of pheromones spread over 1 edge
     public double q { get; } = 0.7;
 
-    public ACOPheromonesEdge[,] pheromonesEdges { get; set; }
+    public PheromonesEdge[,] pheromonesEdges { get; set; }
 
     public void Load(string path) {
       System.IO.StreamReader file = new System.IO.StreamReader(path);
 
       size = Convert.ToInt32(file.ReadLine());
-      distanceEdges = new ACODistanceEdge[size, size];
-      pheromonesEdges = new ACOPheromonesEdge[size, size];
+      distanceEdges = new DistanceEdge[size, size];
+      pheromonesEdges = new PheromonesEdge[size, size];
 
       int rowCounter = 0;
       string line;
@@ -32,15 +32,15 @@ namespace MetaheuristicAlgorithms {
 
         for (int i = 0; i < row.Length; ++i) {
           distanceEdges[rowCounter, i] = 
-            new ACODistanceEdge(Convert.ToInt32(row[i]));
+            new DistanceEdge(Convert.ToInt32(row[i]));
           pheromonesEdges[rowCounter, i] = 
-            new ACOPheromonesEdge(tau0);
+            new PheromonesEdge(tau0);
         }
 
         ++rowCounter;
       }
     }    
-    public ACOPheromonesEdge PheromonesEdge(int i, int j) {
+    public PheromonesEdge PheromonesEdge(int i, int j) {
       return pheromonesEdges[i, j];
     }
   }

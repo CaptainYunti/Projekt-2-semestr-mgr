@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-namespace MetaheuristicAlgorithms {
+namespace Algorithms {
   class Graph {
     public int size { get; set; }
-    public IDistanceEdge[,] distanceEdges { get; set; }
+    public DistanceEdge[,] distanceEdges { get; set; }
 
     public List<int> cities { get; set; }
 
@@ -31,10 +31,10 @@ namespace MetaheuristicAlgorithms {
 
       int pathDistance = CalculatePathDistance(cities);
 
-      System.Console.WriteLine("\nPath length: " + pathDistance);
+      System.Console.WriteLine("\nPath length: " + pathDistance + "\n");
     }
 
-    public IDistanceEdge DistanceEdge(int i, int j) {
+    public DistanceEdge DistanceEdge(int i, int j) {
       return distanceEdges[i, j];
     }
 

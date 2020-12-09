@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MetaheuristicAlgorithms {
+namespace Algorithms {
   class Ant {
     private ACOGraph graph;
     private List<int> visitedCities { get; set; }

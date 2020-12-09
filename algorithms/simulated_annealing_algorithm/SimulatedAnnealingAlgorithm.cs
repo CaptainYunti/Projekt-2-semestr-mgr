@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace MetaheuristicAlgorithms {
+namespace Algorithms {
   class SimulatedAnnealingAlgorithm {
     private SAGraph graph; 
 
     // temperature value
     public double T = 10000.0;
     // epoch length (number of internal iterations)
-    int L = 500;
+    int L = 1000;
     // temperature change factor
     double r = 0.95;
 
