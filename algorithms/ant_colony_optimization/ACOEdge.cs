@@ -1,10 +1,11 @@
 namespace Algorithms {
-  class PheromonesEdge {
-    
+  class ACOEdge : IEdge {
+    public int distance { get; set; }
     public double pheromonesConcentration { get; set; }
 
-    public PheromonesEdge(double pheromonesConcentration) {
-      this.pheromonesConcentration = pheromonesConcentration;
+    public ACOEdge(int distance) {
+      this.pheromonesConcentration = ACOParams.tau0;
+      this.distance = distance;
     }
 
     public void UpdatePheromonesConcentration(double rho, int distance) {

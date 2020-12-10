@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Algorithms {
   class Ant {
-    private ACOGraph graph;
-    private List<int> visitedCities { get; set; }
+    private Graph graph;
+    private List<int> visitedCities;
 
     int startCity;
     int lastCity;
 
-    public Ant(ACOGraph graph) {
+    public Ant(Graph graph) {
       this.graph = graph;
       this.visitedCities = new List<int>();
 
@@ -31,12 +31,12 @@ namespace Algorithms {
 
     private void NextCity() {
       int city = SelectNextCity();
-      int distance = graph.DistanceEdge(lastCity, city).distance;
+      int distance = graph.Edge(lastCity, city).distance;
 
       visitedCities.Add(city);
 
-      graph.PheromonesEdge(lastCity, city).pheromonesConcentration +=
-        graph.q /distance;
+      ((ACOEdge) graph.Edge(lastCity, city)).pheromonesConcentration +=
+        ACOParams.q /distance;
 
       lastCity = city;   
     }
@@ -68,13 +68,13 @@ namespace Algorithms {
     private double CountProbabilityNumerator(int city)
     {
       double pheromonesConcentration = 
-        graph.PheromonesEdge(lastCity, city).pheromonesConcentration;
+        ((ACOEdge) graph.Edge(lastCity, city)).pheromonesConcentration;
       // value of the local criterion function
-      double eta = 1.0 / graph.DistanceEdge(lastCity, city).distance;
+      double eta = 1.0 / graph.Edge(lastCity, city).distance;
 
       double probabilityNumerator = 
-        Math.Pow(pheromonesConcentration, graph.alpha) * 
-        Math.Pow(eta, graph.beta);
+        Math.Pow(pheromonesConcentration, ACOParams.alpha) * 
+        Math.Pow(eta, ACOParams.beta);
 
       return probabilityNumerator;
     }
@@ -87,11 +87,11 @@ namespace Algorithms {
           continue;
         }
 
-        var distance = graph.DistanceEdge(lastCity, city).distance;
+        var distance = graph.Edge(lastCity, city).distance;
 
         probabilityDenumerator += 
-          Math.Pow(distance, graph.alpha) * 
-          Math.Pow(distance, graph.beta);
+          Math.Pow(distance, ACOParams.alpha) * 
+          Math.Pow(distance, ACOParams.beta);
       }
 
       return probabilityDenumerator;

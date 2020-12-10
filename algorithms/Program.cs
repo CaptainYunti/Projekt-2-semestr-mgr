@@ -1,20 +1,21 @@
-﻿namespace Algorithms
+﻿using System.Collections.Generic;
+
+namespace Algorithms
 {
   class Program
   {
     static void Main(string[] args)
     {
-      SimulatedAnnealingAlgorithm saa = new SimulatedAnnealingAlgorithm();
-      AntColonyOptimization aco = new AntColonyOptimization();
-      NearestNeigbourAlgorithm nna = new NearestNeigbourAlgorithm();
+      List<IAlgorithm> algorithms = new List<IAlgorithm>();
 
-      saa.LoadGraph("./graphs/tsp_15.txt");
-      aco.LoadGraph("./graphs/tsp_15.txt");
-      nna.LoadGraph("./graphs/tsp_15.txt");
+      algorithms.Add(new SimulatedAnnealingAlgorithm());
+      algorithms.Add(new AntColonyOptimization());
+      algorithms.Add(new NearestNeigbourAlgorithm());
 
-      saa.Start();
-      aco.Start();
-      nna.Start();
+      foreach (var algorithm in algorithms) {
+        algorithm.LoadGraph("./graphs/tsp_15.txt");
+        algorithm.Start();
+      }
     }
   }
 }

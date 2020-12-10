@@ -1,8 +1,8 @@
 using System;
 
 namespace Algorithms {
-  class NearestNeigbourAlgorithm {
-    private NNGraph graph;
+  class NearestNeigbourAlgorithm : IAlgorithm {
+    private Graph graph;
 
     public void Start() {
       Random random = new Random();
@@ -16,8 +16,8 @@ namespace Algorithms {
 
         for (int currentCity = 0; currentCity < graph.size; ++currentCity) {
           if (!graph.cities.Contains(currentCity)) {
-            if (shortestPath > graph.DistanceEdge(city, currentCity).distance) {
-              shortestPath = graph.DistanceEdge(city, currentCity).distance;
+            if (shortestPath > graph.Edge(city, currentCity).distance) {
+              shortestPath = graph.Edge(city, currentCity).distance;
               nearestCity = currentCity;
             }
           }
@@ -30,9 +30,9 @@ namespace Algorithms {
     }
 
     public void LoadGraph(string path) {
-      graph = new NNGraph();
+      graph = new Graph();
 
-      graph.Load(path);
+      graph.Load(path, Algorithm.NNA);
     }
   }
 }

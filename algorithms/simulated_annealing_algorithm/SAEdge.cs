@@ -1,8 +1,8 @@
 namespace Algorithms {
-  public class DistanceEdge {
+  class SAEdge : IEdge {
     public int distance { get; set; }
 
-    public DistanceEdge( int distance) {
+    public SAEdge(int distance) {
       this.distance = distance;
     }
   }

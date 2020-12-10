@@ -1,20 +1,18 @@
 using System.Collections.Generic;
 
 namespace Algorithms {
-  class AntColonyOptimization {
-    private ACOGraph graph; 
+  class AntColonyOptimization : IAlgorithm {
+    private Graph graph; 
     private List<Ant> ants;
-
-    private int iterationsNumber = 500;
 
     public AntColonyOptimization() {
       ants = new List<Ant>();
     }
 
     public void LoadGraph(string path) {
-      graph = new ACOGraph();
+      graph = new Graph();
 
-      graph.Load(path);
+      graph.Load(path, Algorithm.ACO);
 
       for (int i = 0; i < graph.size; ++i) {
         ants.Add(new Ant(graph));
@@ -22,7 +20,7 @@ namespace Algorithms {
     }
 
     public void Start() {
-      for (int i = 0; i < iterationsNumber; ++i) {
+      for (int i = 0; i < ACOParams.iterationsNumber; ++i) {
         DoIteration();
         UpdatePheromonoesConcentration();
       }
@@ -38,10 +36,11 @@ namespace Algorithms {
 
     private void UpdatePheromonoesConcentration() {
       for (int i = 0; i < graph.size - 1; ++i) {
-        var distance = graph.DistanceEdge(i, i + 1).distance;
+        var distance = graph.Edge(i, i + 1).distance;
 
-        graph.PheromonesEdge(i, i + 1).UpdatePheromonesConcentration(graph.rho,
-                                                                     distance);
+        ((ACOEdge) graph.Edge(i, i + 1))
+                        .UpdatePheromonesConcentration(ACOParams.rho,
+                                                       distance);
       }
     }
   }

@@ -2,17 +2,8 @@ using System;
 using System.Collections.Generic;
 
 namespace Algorithms {
-  class SimulatedAnnealingAlgorithm {
-    private SAGraph graph; 
-
-    // temperature value
-    public double T = 10000.0;
-    // epoch length (number of internal iterations)
-    int L = 1000;
-    // temperature change factor
-    double r = 0.95;
-
-    private int iterationsNumber = 200;
+  class SimulatedAnnealingAlgorithm : IAlgorithm {
+    private Graph graph; 
 
     private List<int> lastPermutation;
 
@@ -23,22 +14,22 @@ namespace Algorithms {
 
       graph.cities = new List<int>(lastPermutation);
 
-      for (int i = 0; i < iterationsNumber; ++i) {
+      for (int i = 0; i < SAParams.iterationsNumber; ++i) {
         DoInternalIterations();
-        CalculateNewTemperature();
+        SAParams.CalculateNewTemperature();
       }
 
       graph.PrintShortestPath();
     }
 
     public void LoadGraph(string path) {
-      graph = new SAGraph();
+      graph = new Graph();
 
-      graph.Load(path);
+      graph.Load(path, Algorithm.SAA);
     }
 
     private void DoInternalIterations() {
-      for (int j = 0; j < L; ++j) {
+      for (int j = 0; j < SAParams.L; ++j) {
         List<int> adjacentPermutation = 
           GetRandomAdjacentPermutation(lastPermutation);
         // difference in costs of solutions: new and previous
@@ -61,7 +52,7 @@ namespace Algorithms {
         double x = random.NextDouble();
 
         // choose the worse solution with some probability
-        if (x < Math.Exp(-delta / T)) {
+        if (x < Math.Exp(-delta / SAParams.T)) {
           return true;
         }
       }
@@ -112,8 +103,6 @@ namespace Algorithms {
       return adjacentPermutation;
     }
 
-    private void CalculateNewTemperature() {
-      T = T * r;
-    }
+    
   }
 }
