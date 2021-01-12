@@ -10,6 +10,7 @@ namespace Algorithms
 
       algorithms.Add(new SimulatedAnnealingAlgorithm());
       algorithms.Add(new AntColonyOptimization());
+      algorithms.Add(new GeneticAlgorithm());
       algorithms.Add(new NearestNeigbourAlgorithm());
 
       foreach (var algorithm in algorithms) {

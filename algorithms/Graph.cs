@@ -19,6 +19,7 @@ namespace Algorithms {
       edges = algorithm switch {
         Algorithm.ACO => new ACOEdge[size, size],
         Algorithm.SAA => new SAEdge[size, size],
+        Algorithm.GA => new GAEdge[size, size],
         Algorithm.NNA => new NNEdge[size, size],
         _ => throw new ArgumentException(message: "invalid enum value",
                                          paramName: nameof(algorithm)),
@@ -34,6 +35,7 @@ namespace Algorithms {
           edges[rowCounter, i] = algorithm switch {
             Algorithm.ACO => new ACOEdge(Convert.ToInt32(row[i])),
             Algorithm.SAA => new SAEdge(Convert.ToInt32(row[i])),
+            Algorithm.GA => new GAEdge(Convert.ToInt32(row[i])),
             Algorithm.NNA => new NNEdge(Convert.ToInt32(row[i])),
             _ => throw new ArgumentException(message: "invalid enum value",
                                              paramName: nameof(algorithm)),
