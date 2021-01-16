@@ -16,31 +16,49 @@ namespace Algorithms {
 
       size = Convert.ToInt32(file.ReadLine());
 
-      edges = algorithm switch {
-        Algorithm.ACO => new ACOEdge[size, size],
-        Algorithm.SAA => new SAEdge[size, size],
-        Algorithm.GA => new GAEdge[size, size],
-        Algorithm.NNA => new NNEdge[size, size],
-        _ => throw new ArgumentException(message: "invalid enum value",
-                                         paramName: nameof(algorithm)),
-      };
-      
-      int rowCounter = 0;
+            switch (algorithm)
+            {
+                case Algorithm.ACO:
+                    edges = new ACOEdge[size, size];
+                    break;
+                case Algorithm.SAA:
+                    edges = new SAEdge[size, size];
+                    break;
+                case Algorithm.GA:
+                    edges = new GAEdge[size, size];
+                      break;
+                case Algorithm.NNA:
+                    edges = new NNEdge[size, size];
+                    break;
+                default:
+                    break;
+            }
+
+            int rowCounter = 0;
       string line;
 
       while ((line = file.ReadLine()) != null) {
         string[] row = line.Split();
 
         for (int i = 0; i < row.Length; ++i) {
-          edges[rowCounter, i] = algorithm switch {
-            Algorithm.ACO => new ACOEdge(Convert.ToInt32(row[i])),
-            Algorithm.SAA => new SAEdge(Convert.ToInt32(row[i])),
-            Algorithm.GA => new GAEdge(Convert.ToInt32(row[i])),
-            Algorithm.NNA => new NNEdge(Convert.ToInt32(row[i])),
-            _ => throw new ArgumentException(message: "invalid enum value",
-                                             paramName: nameof(algorithm)),
-          };
-        }
+                    switch (algorithm)
+                    {
+                        case Algorithm.ACO:
+                            edges = new ACOEdge[size, size];
+                            break;
+                        case Algorithm.SAA:
+                            edges = new SAEdge[size, size];
+                            break;
+                        case Algorithm.GA:
+                            edges = new GAEdge[size, size];
+                            break;
+                        case Algorithm.NNA:
+                            edges = new NNEdge[size, size];
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
         ++rowCounter;
       }
