@@ -6724,5 +6724,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   redBuildings: []
-  nextBuilding: 0
+  nextBuilding: 2
   speed: 20

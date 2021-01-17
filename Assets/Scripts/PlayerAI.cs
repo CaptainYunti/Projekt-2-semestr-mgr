@@ -8,6 +8,7 @@ public class PlayerAI : MonoBehaviour
 
     GameObject[] buildings;
     public List<GameObject> redBuildings;
+    List<GameObject> copyRedBuildings;
     public int nextBuilding;
     int numberRed;
     int prevBuilding;
@@ -32,11 +33,12 @@ public class PlayerAI : MonoBehaviour
  
         }
 
+        copyRedBuildings = redBuildings;
 
         print(numberRed);
         SaveMatrixToFile(redBuildings, numberRed);
 
-        //SaveMatrixToFile(redBuildings, numberRed);
+        transform.position = buildings[0].transform.position;
 
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
@@ -124,6 +126,14 @@ public class PlayerAI : MonoBehaviour
 
 
         return matrix;
+    }
+
+    public void NewAlgorithm()
+    {
+        redBuildings = copyRedBuildings;
+        transform.position = buildings[0].transform.position;
+        prevBuilding = -1;
+        ChangeBuilding(buildings[nextBuilding]);
     }
 
 }
