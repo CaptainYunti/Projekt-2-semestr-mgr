@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class PlayerAI : MonoBehaviour
 {
@@ -31,15 +32,9 @@ public class PlayerAI : MonoBehaviour
  
         }
 
-        long number = 0;
-        for (int i = 0; i < 50; i++)
-            for (int j = 0; j < i + 1; j++)
-                number += 1;
-
-        print("long = " + number);
 
         print(numberRed);
-        print(MakeMatrix(redBuildings, numberRed));
+        SaveMatrixToFile(redBuildings, numberRed);
 
         //SaveMatrixToFile(redBuildings, numberRed);
 
@@ -93,17 +88,24 @@ public class PlayerAI : MonoBehaviour
 
     void SaveMatrixToFile(List<GameObject> buildings, int number)
     {
-        string data = MakeMatrix(buildings, number);
+        string matrix = MakeMatrix(buildings, number);
+        string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
+        string path = Application.dataPath + "/Algorithms/graphs/";
+        path += name + ".txt";
+        File.WriteAllText(path, matrix);
+        print(path);
+
     }
 
     string MakeMatrix(List<GameObject> buildings, int number)
     {
-        string matrix = "";
+        string matrix = number.ToString() + '\n';
         int distance;
+
 
         for(int i = 0; i < number; i++)
         {
-            for(int j = 0; j < i+1; j++)
+            for(int j = 0; j < number; j++)
             {
                 if(i == j)
                 {
