@@ -6726,3 +6726,4 @@ MonoBehaviour:
   redBuildings: []
   nextBuilding: 2
   speed: 20
+  buildingRed: {fileID: 2100000, guid: 12b9e94485fd56a45a146c725382387a, type: 2}

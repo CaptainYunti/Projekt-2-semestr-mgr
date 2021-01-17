@@ -15,6 +15,9 @@ public class PlayerAI : MonoBehaviour
     public float speed;
     Vector3 direction;
     bool isBuildingReached;
+    [SerializeField]
+    Material buildingRed;
+    public bool switchAlgorithm;
  
 
     // Start is called before the first frame update
@@ -38,6 +41,8 @@ public class PlayerAI : MonoBehaviour
         print(numberRed);
         SaveMatrixToFile(redBuildings, numberRed);
 
+        switchAlgorithm = false;
+
         transform.position = buildings[0].transform.position;
 
         prevBuilding = -1;
@@ -60,6 +65,12 @@ public class PlayerAI : MonoBehaviour
         }
 
         transform.LookAt(buildings[nextBuilding].transform);
+
+        if(switchAlgorithm)
+        {
+            NewAlgorithm();
+            switchAlgorithm = false;
+        }
     }
 
     void Move()
@@ -131,6 +142,12 @@ public class PlayerAI : MonoBehaviour
     public void NewAlgorithm()
     {
         redBuildings = copyRedBuildings;
+
+        foreach(GameObject build in redBuildings)
+        {
+            build.GetComponent<Renderer>().sharedMaterial = buildingRed;
+        }
+
         transform.position = buildings[0].transform.position;
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
