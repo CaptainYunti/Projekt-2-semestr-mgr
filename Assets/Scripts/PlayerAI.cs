@@ -6,7 +6,9 @@ public class PlayerAI : MonoBehaviour
 {
 
     GameObject[] buildings;
+    public List<GameObject> redBuildings;
     public int nextBuilding;
+    int numberRed;
     int prevBuilding;
     public float speed;
     Vector3 direction;
@@ -17,9 +19,34 @@ public class PlayerAI : MonoBehaviour
     void Start()
     {
         buildings = GameObject.FindGameObjectsWithTag("Building");
+        numberRed = 0;
+
+        foreach(GameObject build in buildings)
+        {
+            if (build.GetComponent<Renderer>().sharedMaterial.name == "Red")
+            {
+                redBuildings.Add(build);
+                numberRed++;
+            }
+ 
+        }
+
+        long number = 0;
+        for (int i = 0; i < 50; i++)
+            for (int j = 0; j < i + 1; j++)
+                number += 1;
+
+        print("long = " + number);
+
+        print(numberRed);
+        print(MakeMatrix(redBuildings, numberRed));
+
+        //SaveMatrixToFile(redBuildings, numberRed);
+
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -62,6 +89,39 @@ public class PlayerAI : MonoBehaviour
 
         isBuildingReached = false;
         print(building.name);
+    }
+
+    void SaveMatrixToFile(List<GameObject> buildings, int number)
+    {
+        string data = MakeMatrix(buildings, number);
+    }
+
+    string MakeMatrix(List<GameObject> buildings, int number)
+    {
+        string matrix = "";
+        int distance;
+
+        for(int i = 0; i < number; i++)
+        {
+            for(int j = 0; j < i+1; j++)
+            {
+                if(i == j)
+                {
+                    matrix += "-1 ";
+                    continue;
+                }
+
+                distance = (int)Vector3.Distance(buildings[i].transform.position, buildings[j].transform.position);
+
+                matrix += distance.ToString() + " ";
+            }
+
+            matrix += "\n";
+        }
+
+
+
+        return matrix;
     }
 
 }

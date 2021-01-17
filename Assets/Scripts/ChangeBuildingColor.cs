@@ -27,7 +27,6 @@ public class ChangeBuildingColor : MonoBehaviour
         {
             rend.sharedMaterial = material[1];
         }
-
         
     }
 
