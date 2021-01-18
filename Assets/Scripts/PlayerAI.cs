@@ -15,6 +15,7 @@ public class PlayerAI : MonoBehaviour
     public static List<int> antRoad;
     public static List<int> geneticRoad;
     public static List<List<int>> roads;
+    List<int> goodRoad;
     public int nextBuilding;
     int numberRed;
     int prevBuilding;
@@ -69,14 +70,17 @@ public class PlayerAI : MonoBehaviour
         ChangeBuilding(buildings[nextBuilding]);
 
 
+        goodRoad = Algorithms.Program.SimulatedAnnealing();
 
-        //roads = [annealingRoad, antRoad, geneticRoad, neighbourRoad];
-        roads.Add(annealingRoad);
-        roads.Add(antRoad);
-        roads.Add(geneticRoad);
-        roads.Add(neighbourRoad);
+       /* roads = new List<List<int>>
+        {
+            annealingRoad,
+            antRoad,
+            geneticRoad,
+            neighbourRoad
+        };*/
 
-        print("Annealing" + annealingRoad.ToString());
+        //print("Annealing" + annealingRoad.ToString());
         algorithmCount++;
         countBuildingOnRoad = 0;
 
@@ -95,7 +99,7 @@ public class PlayerAI : MonoBehaviour
         if(isBuildingReached && prevBuilding != nextBuilding)
         {
             countBuildingOnRoad++;
-            nextBuilding = roads[algorithmCount][countBuildingOnRoad];
+            nextBuilding = goodRoad[countBuildingOnRoad];
             ChangeBuilding(buildings[nextBuilding]);
         }
 
@@ -193,32 +197,24 @@ public class PlayerAI : MonoBehaviour
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
 
-        /*switch(algorithmCount)
+        switch(algorithmCount)
         {
-            case 1: 
-                algorithms[1].LoadGraph(path);
-                algorithms[1].Start();
-                goodRoad = algorithms[1].GetCities();
-                print("Annealing" + goodRoad.ToString());
-                print("Ants" + goodRoad.ToString());
+            case 1:
+                goodRoad = Algorithms.Program.AntColony();
                 break;
-            case 2: 
-                algorithms[2].LoadGraph(path);
-                algorithms[2].Start();
-                goodRoad = algorithms[2].GetCities();
+            case 2:
+                goodRoad = Algorithms.Program.GeneticAlgorithm();
                 print("Genetic" + goodRoad.ToString());
                 break;
             case 3:
-                algorithms[3].LoadGraph(path);
-                algorithms[3].Start();
-                goodRoad = algorithms[3].GetCities();
+                goodRoad = Algorithms.Program.NearestNeighbour();
                 print("Nearest" + goodRoad.ToString());
                 break;
             default:
                 print("No tak się nie da");
                 break;
         }
-        */
+        
         algorithmCount++;
         
     }
