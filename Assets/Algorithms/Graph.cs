@@ -12,10 +12,13 @@ namespace Algorithms {
       this.cities = new List<int>();
     }
 
-    public void Load(string path, Algorithm algorithm) {
-      System.IO.StreamReader file = new System.IO.StreamReader(path);
+        public void Load(string path, Algorithm algorithm)
+        {
 
-      size = Convert.ToInt32(file.ReadLine());
+            System.IO.StreamReader file = new System.IO.StreamReader(path);
+
+            size = Convert.ToInt32(file.ReadLine());
+            cities = new List<int>();
 
             switch (algorithm)
             {
@@ -27,7 +30,7 @@ namespace Algorithms {
                     break;
                 case Algorithm.GA:
                     edges = new GAEdge[size, size];
-                      break;
+                    break;
                 case Algorithm.NNA:
                     edges = new NNEdge[size, size];
                     break;
@@ -36,36 +39,43 @@ namespace Algorithms {
             }
 
             int rowCounter = 0;
-      string line;
+            string line;
 
-      while ((line = file.ReadLine()) != null) {
-        string[] row = line.Split();
+            while ((line = file.ReadLine()) != null)
+            {
+                string[] row = line.Split();
 
-        for (int i = 0; i < row.Length; ++i) {
+                for (int i = 0; i < row.Length; ++i)
+                {
+                    if (row[i] == "")
+                    {
+                        continue;
+                    }
                     switch (algorithm)
                     {
                         case Algorithm.ACO:
-                            edges = new ACOEdge[size, size];
+                            edges[rowCounter, i] = new ACOEdge(Convert.ToInt32(row[i]));
                             break;
                         case Algorithm.SAA:
-                            edges = new SAEdge[size, size];
+                            edges[rowCounter, i] = new SAEdge(Convert.ToInt32(row[i]));
                             break;
                         case Algorithm.GA:
-                            edges = new GAEdge[size, size];
+                            edges[rowCounter, i] = new GAEdge(Convert.ToInt32(row[i]));
                             break;
                         case Algorithm.NNA:
-                            edges = new NNEdge[size, size];
+                            edges[rowCounter, i] = new NNEdge(Convert.ToInt32(row[i]));
                             break;
                         default:
-                            break;
+                            throw new ArgumentException(message: "invalid enum value",
+                                                        paramName: nameof(algorithm));
                     }
                 }
 
-        ++rowCounter;
-      }
-    }
+                ++rowCounter;
+            }
+        }
 
-    public void Print() {
+        public void Print() {
       for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
           System.Console.Write(edges[i, j].distance + " ");
