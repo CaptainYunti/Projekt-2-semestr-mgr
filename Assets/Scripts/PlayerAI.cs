@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Algorithms;
 
 public class PlayerAI : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class PlayerAI : MonoBehaviour
     GameObject[] buildings;
     public List<GameObject> redBuildings;
     List<GameObject> copyRedBuildings;
+    public static List<int> annealingRoad;
+    public static List<int> neighbourRoad;
+    public static List<int> antRoad;
+    public static List<int> geneticRoad;
+    public static List<List<int>> roads;
     public int nextBuilding;
     int numberRed;
     int prevBuilding;
@@ -18,13 +24,22 @@ public class PlayerAI : MonoBehaviour
     [SerializeField]
     Material buildingRed;
     public bool switchAlgorithm;
+    int algorithmCount;
+    int countBuildingOnRoad;
+    //List <Algorithms.IAlgorithm> algorithms;
+    //string path;
+    public static bool areAlgorithmsCompute;
  
 
     // Start is called before the first frame update
     void Start()
     {
+
+        areAlgorithmsCompute = true;
+
         buildings = GameObject.FindGameObjectsWithTag("Building");
         numberRed = 0;
+        algorithmCount = 0;
 
         foreach(GameObject build in buildings)
         {
@@ -36,10 +51,15 @@ public class PlayerAI : MonoBehaviour
  
         }
 
+        print("red: " + redBuildings.ToArray().Length);
+
         copyRedBuildings = redBuildings;
 
-        print(numberRed);
-        SaveMatrixToFile(redBuildings, numberRed);
+        //print(numberRed);
+
+        //path = SaveMatrixToFile(redBuildings, numberRed);
+
+        //Algorithms.Program.graphPath = path;
 
         switchAlgorithm = false;
 
@@ -47,6 +67,19 @@ public class PlayerAI : MonoBehaviour
 
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
+
+
+
+        //roads = [annealingRoad, antRoad, geneticRoad, neighbourRoad];
+        roads.Add(annealingRoad);
+        roads.Add(antRoad);
+        roads.Add(geneticRoad);
+        roads.Add(neighbourRoad);
+
+        print("Annealing" + annealingRoad.ToString());
+        algorithmCount++;
+        countBuildingOnRoad = 0;
+
     }
 
 
@@ -61,6 +94,8 @@ public class PlayerAI : MonoBehaviour
 
         if(isBuildingReached && prevBuilding != nextBuilding)
         {
+            countBuildingOnRoad++;
+            nextBuilding = roads[algorithmCount][countBuildingOnRoad];
             ChangeBuilding(buildings[nextBuilding]);
         }
 
@@ -71,6 +106,9 @@ public class PlayerAI : MonoBehaviour
             NewAlgorithm();
             switchAlgorithm = false;
         }
+
+        switchAlgorithm = ShouldSwitchAlgorithm();
+
     }
 
     void Move()
@@ -99,7 +137,7 @@ public class PlayerAI : MonoBehaviour
         print(building.name);
     }
 
-    void SaveMatrixToFile(List<GameObject> buildings, int number)
+    string SaveMatrixToFile(List<GameObject> buildings, int number)
     {
         string matrix = MakeMatrix(buildings, number);
         string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
@@ -107,6 +145,10 @@ public class PlayerAI : MonoBehaviour
         path += name + ".txt";
         File.WriteAllText(path, matrix);
         print(path);
+
+        Program.graphPath = path;
+
+        return path;
 
     }
 
@@ -135,7 +177,6 @@ public class PlayerAI : MonoBehaviour
         }
 
 
-
         return matrix;
     }
 
@@ -151,6 +192,52 @@ public class PlayerAI : MonoBehaviour
         transform.position = buildings[0].transform.position;
         prevBuilding = -1;
         ChangeBuilding(buildings[nextBuilding]);
+
+        /*switch(algorithmCount)
+        {
+            case 1: 
+                algorithms[1].LoadGraph(path);
+                algorithms[1].Start();
+                goodRoad = algorithms[1].GetCities();
+                print("Annealing" + goodRoad.ToString());
+                print("Ants" + goodRoad.ToString());
+                break;
+            case 2: 
+                algorithms[2].LoadGraph(path);
+                algorithms[2].Start();
+                goodRoad = algorithms[2].GetCities();
+                print("Genetic" + goodRoad.ToString());
+                break;
+            case 3:
+                algorithms[3].LoadGraph(path);
+                algorithms[3].Start();
+                goodRoad = algorithms[3].GetCities();
+                print("Nearest" + goodRoad.ToString());
+                break;
+            default:
+                print("No tak się nie da");
+                break;
+        }
+        */
+        algorithmCount++;
+        
     }
+
+    bool ShouldSwitchAlgorithm()
+    {
+        foreach (GameObject build in buildings)
+        {
+            if (build.GetComponent<Renderer>().sharedMaterial.name == "Red")
+                return false;
+        }
+
+        return true;
+    }
+
+    IEnumerator HaltStart()
+    {
+        yield return null;
+    }
+
 
 }

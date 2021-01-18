@@ -103,6 +103,23 @@ namespace Algorithms {
       return adjacentPermutation;
     }
 
-    
-  }
+        public List<int> GetCities()
+        {
+            return graph.cities;
+        }
+/*
+        private SimulatedAnnealingAlgorithm() { }
+
+        private static SimulatedAnnealingAlgorithm _instance;
+
+        public static SimulatedAnnealingAlgorithm GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new SimulatedAnnealingAlgorithm();
+            }
+            return _instance;
+        }
+*/
+    }
 }

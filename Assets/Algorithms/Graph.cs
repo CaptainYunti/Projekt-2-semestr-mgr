@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Algorithms {
-  class Graph {
+  class Graph{
     public int size { get; set; }
     public IEdge[,] edges { get; set; }
     public List<int> cities { get; set; }

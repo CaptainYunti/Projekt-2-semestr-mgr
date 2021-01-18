@@ -9,7 +9,12 @@ namespace Algorithms {
       ants = new List<Ant>();
     }
 
-    public void LoadGraph(string path) {
+        public List<int> GetCities()
+        {
+            return graph.cities;
+        }
+
+        public void LoadGraph(string path) {
       graph = new Graph();
 
       graph.Load(path, Algorithm.ACO);

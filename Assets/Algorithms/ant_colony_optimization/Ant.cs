@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Algorithms {
-  class Ant {
+  class Ant{
     private Graph graph;
     private List<int> visitedCities;
 
@@ -67,6 +68,7 @@ namespace Algorithms {
 
     private double CountProbabilityNumerator(int city)
     {
+            //print("city: " + city.ToString());
       double pheromonesConcentration = 
         ((ACOEdge) graph.Edge(lastCity, city)).pheromonesConcentration;
       // value of the local criterion function
@@ -98,7 +100,7 @@ namespace Algorithms {
     }
 
     private void ClearCycle() {
-      Random random = new Random();
+            System.Random random = new System.Random();
 
       startCity = random.Next(graph.size);
       lastCity = startCity;

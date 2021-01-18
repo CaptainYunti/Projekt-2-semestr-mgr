@@ -133,5 +133,10 @@ namespace Algorithms {
         }
       }
     }
-  }
+
+        public List<int> GetCities()
+        {
+            return graph.cities;
+        }
+    }
 }

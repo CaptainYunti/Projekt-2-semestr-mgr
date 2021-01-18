@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Algorithms {
   class NearestNeigbourAlgorithm : IAlgorithm {
@@ -34,5 +35,10 @@ namespace Algorithms {
 
       graph.Load(path, Algorithm.NNA);
     }
-  }
+
+        public List<int> GetCities()
+        {
+            return graph.cities;
+        }
+    }
 }
