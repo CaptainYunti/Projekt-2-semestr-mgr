@@ -27533,7 +27533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialRed: {fileID: 2100000, guid: 12b9e94485fd56a45a146c725382387a, type: 2}
-  redNumber: 20
+  redNumber: 50
 --- !u!4 &1829782488
 Transform:
   m_ObjectHideFlags: 0

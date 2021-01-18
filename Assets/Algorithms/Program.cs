@@ -64,8 +64,8 @@ namespace Algorithms
             print("Wyżarzanie");
             algorithms[0].LoadGraph(graphPath);
             algorithms[0].Start();
-            print("Ile miast: " + algorithms[0].GetCities().ToArray().Length); //dziala
-            print("Pierwsze miasto:" + algorithms[0].GetCities()[0]); //dziala
+            //print("Ile miast: " + algorithms[0].GetCities().ToArray().Length); //dziala
+            //print("Pierwsze miasto:" + algorithms[0].GetCities()[0]); //dziala
             //PlayerAI.roads[0] = algorithms[0].GetCities(); //nie dziala
             return algorithms[0].GetCities();
 
