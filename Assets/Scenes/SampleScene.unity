@@ -27533,7 +27533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialRed: {fileID: 2100000, guid: 12b9e94485fd56a45a146c725382387a, type: 2}
-  redNumber: 50
+  redNumber: 20
 --- !u!4 &1829782488
 Transform:
   m_ObjectHideFlags: 0
@@ -30429,6 +30429,7 @@ MonoBehaviour:
   nextBuilding: 5
   speed: 20
   buildingRed: {fileID: 2100000, guid: 12b9e94485fd56a45a146c725382387a, type: 2}
+  buildingGreen: {fileID: 2100000, guid: 0560db45f8c1ab74f889b69ef4ebbeaf, type: 2}
   switchAlgorithm: 0
 --- !u!1 &2102450641
 GameObject:

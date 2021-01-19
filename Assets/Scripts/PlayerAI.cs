@@ -10,83 +10,45 @@ public class PlayerAI : MonoBehaviour
     GameObject[] buildings;
     public List<GameObject> redBuildings;
     List<GameObject> copyRedBuildings;
-    public static List<int> annealingRoad;
-    public static List<int> neighbourRoad;
-    public static List<int> antRoad;
-    public static List<int> geneticRoad;
-    public static List<List<int>> roads;
     List<int> goodRoad;
     public int nextBuilding;
-    int numberRed;
-    int prevBuilding;
     public float speed;
     Vector3 direction;
     bool isBuildingReached;
     [SerializeField]
     Material buildingRed;
+    [SerializeField]
+    Material buildingGreen;
     public bool switchAlgorithm;
     int algorithmCount;
-    int countBuildingOnRoad;
-    //List <Algorithms.IAlgorithm> algorithms;
-    //string path;
-    public static bool areAlgorithmsCompute;
+    int countRoad;
+    int lenRed;
  
 
     // Start is called before the first frame update
     void Start()
     {
 
-        areAlgorithmsCompute = true;
-
         buildings = GameManager.buildings;
-        //buildings = GameObject.FindGameObjectsWithTag("Building");
-        numberRed = 0;
+
         algorithmCount = 0;
 
-        /*foreach(GameObject build in buildings)
-        {
-            if (build.GetComponent<Renderer>().sharedMaterial.name == "Red")
-            {
-                redBuildings.Add(build);
-                numberRed++;
-            }
- 
-        }*/
-
         redBuildings = GameManager.redBuildings;
-
-        //print("red: " + redBuildings.ToArray().Length);
-
+        lenRed = redBuildings.Count;
         copyRedBuildings = redBuildings;
-
-        //print(numberRed);
-
-        //path = SaveMatrixToFile(redBuildings, numberRed);
-
-        //Algorithms.Program.graphPath = path;
+        copyRedBuildings = redBuildings;
 
         switchAlgorithm = false;
 
-        transform.position = redBuildings[0].transform.position;
-
-        prevBuilding = -1;
-
-
-
         goodRoad = Algorithms.Program.SimulatedAnnealing();
-        ChangeBuilding(buildings[nextBuilding]);
+        countRoad = 0;
+        nextBuilding = goodRoad[countRoad++];
+        transform.position = redBuildings[nextBuilding].transform.position;
+        redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
+        nextBuilding = goodRoad[countRoad++];
+        ChangeBuilding(redBuildings[nextBuilding]);
 
-        /* roads = new List<List<int>>
-         {
-             annealingRoad,
-             antRoad,
-             geneticRoad,
-             neighbourRoad
-         };*/
-
-        //print("Annealing" + annealingRoad.ToString());
         algorithmCount++;
-        countBuildingOnRoad = 0;
 
     }
 
@@ -94,9 +56,6 @@ public class PlayerAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //print("is reached = " + isBuildingReached);
-        //print("next = " + nextBuilding);
-        //print("prev = " + prevBuilding);
 
         switchAlgorithm = ShouldSwitchAlgorithm();
 
@@ -114,16 +73,14 @@ public class PlayerAI : MonoBehaviour
  
         }
 
-        if(isBuildingReached)
+        if(isBuildingReached && countRoad < lenRed)
         {
-            //countBuildingOnRoad++;
-            nextBuilding = goodRoad[countBuildingOnRoad++];
+            //print(redBuildings[nextBuilding]);
+            nextBuilding = goodRoad[countRoad++];
             ChangeBuilding(redBuildings[nextBuilding]);
         }
 
         transform.LookAt(redBuildings[nextBuilding].transform);
-
-
 
     }
 
@@ -141,7 +98,8 @@ public class PlayerAI : MonoBehaviour
         if (other.gameObject == redBuildings[nextBuilding])
         {
             isBuildingReached = true;
-
+            print(redBuildings[nextBuilding]);
+            redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
 
         }
   
@@ -151,52 +109,9 @@ public class PlayerAI : MonoBehaviour
     {
 
         isBuildingReached = false;
-        print(building.name);
+        //print(building.name);
         //prevBuilding = nextBuilding;
 
-    }
-
-    string SaveMatrixToFile(List<GameObject> buildings, int number)
-    {
-        string matrix = MakeMatrix(buildings, number);
-        string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
-        string path = Application.dataPath + "/Algorithms/graphs/";
-        path += name + ".txt";
-        File.WriteAllText(path, matrix);
-        //print(path);
-
-        Program.graphPath = path;
-
-        return path;
-
-    }
-
-    string MakeMatrix(List<GameObject> buildings, int number)
-    {
-        string matrix = number.ToString() + '\n';
-        int distance;
-
-
-        for(int i = 0; i < number; i++)
-        {
-            for(int j = 0; j < number; j++)
-            {
-                if(i == j)
-                {
-                    matrix += "-1 ";
-                    continue;
-                }
-
-                distance = (int)Vector3.Distance(buildings[i].transform.position, buildings[j].transform.position);
-
-                matrix += distance.ToString() + " ";
-            }
-
-            matrix += "\n";
-        }
-
-
-        return matrix;
     }
 
     public void NewAlgorithm()
@@ -208,13 +123,8 @@ public class PlayerAI : MonoBehaviour
             build.GetComponent<Renderer>().sharedMaterial = buildingRed;
         }
 
-        nextBuilding = 0;
-        countBuildingOnRoad = 0;
-        transform.position = buildings[0].transform.position;
-        prevBuilding = -1;
-        ChangeBuilding(buildings[nextBuilding]);
 
-        switch(algorithmCount)
+        switch (algorithmCount)
         {
             case 1:
                 goodRoad = Algorithms.Program.AntColony();
@@ -231,7 +141,14 @@ public class PlayerAI : MonoBehaviour
                 //print("No tak się nie da");
                 break;
         }
-        
+
+        countRoad = 0;
+        countRoad = 0;
+        nextBuilding = goodRoad[countRoad++];
+        transform.position = redBuildings[nextBuilding].transform.position;
+        redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
+        nextBuilding = goodRoad[countRoad++];
+        ChangeBuilding(redBuildings[nextBuilding]);
         algorithmCount++;
         
     }
@@ -246,11 +163,5 @@ public class PlayerAI : MonoBehaviour
 
         return true;
     }
-
-    IEnumerator HaltStart()
-    {
-        yield return null;
-    }
-
 
 }

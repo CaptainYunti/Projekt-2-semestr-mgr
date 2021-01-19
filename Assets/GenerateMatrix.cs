@@ -9,14 +9,13 @@ public class GenerateMatrix : MonoBehaviour
 
     GameObject[] buildings;
     public List<GameObject> redBuildings;
-    List<GameObject> copyRedBuildings;
     int numberRed;
     string path;
 
     // Start is called before the first frame update
     void Start()
     {
-        buildings = GameObject.FindGameObjectsWithTag("Building");
+        buildings = GameManager.buildings;
         numberRed = 0;
         foreach (GameObject build in buildings)
         {

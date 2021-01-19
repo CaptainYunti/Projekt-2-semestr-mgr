@@ -33,11 +33,11 @@ public class ChangeBuildingColor : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
-    {
+    {/*
         if (rend.sharedMaterial == material[1])
         {
             rend.sharedMaterial = material[2];
-        }
+        }*/
     }
 
     public void SetRed()
