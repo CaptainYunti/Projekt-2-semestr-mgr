@@ -1,26 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Algorithms {
   class SimulatedAnnealingAlgorithm : IAlgorithm {
-    private Graph graph; 
-
+    private Graph graph;
     private List<int> lastPermutation;
 
     private static Random random = new Random();
-
-    public void Start() {
-      lastPermutation = GetRandomPermutation();
-
-      graph.cities = new List<int>(lastPermutation);
-
-      for (int i = 0; i < SAParams.iterationsNumber; ++i) {
-        DoInternalIterations();
-        SAParams.CalculateNewTemperature();
-      }
-
-      graph.PrintShortestPath();
-    }
 
     public void LoadGraph(string path) {
       graph = new Graph();
@@ -28,10 +15,31 @@ namespace Algorithms {
       graph.Load(path, Algorithm.SAA);
     }
 
+    public void Start(int iterationsNumber) {
+      lastPermutation = GetRandomPermutation();
+
+      graph.cities = new List<int>(lastPermutation);
+
+      for (int j = 0; j < iterationsNumber; ++j) {
+        DoInternalIterations();
+        SAParams.CalculateNewTemperature();
+      }
+    }
+
+    public int GetBestSolution() {
+      return graph.GetShortestPath();
+    }
+
     private void DoInternalIterations() {
       for (int j = 0; j < SAParams.L; ++j) {
         List<int> adjacentPermutation = 
           GetRandomAdjacentPermutation(lastPermutation);
+
+        if (graph.CalculatePathDistance(adjacentPermutation) <
+            graph.CalculatePathDistance(graph.cities)) {
+          graph.cities = new List<int>(adjacentPermutation);
+        }
+
         // difference in costs of solutions: new and previous
         int delta = 
           graph.CalculatePathDistance(adjacentPermutation) - 
@@ -39,8 +47,6 @@ namespace Algorithms {
 
         if (ShouldChangeSolution(delta)) {
           lastPermutation = adjacentPermutation;
-
-          graph.cities = new List<int>(lastPermutation);
         }
       }
     }
@@ -64,45 +70,30 @@ namespace Algorithms {
       List<int> permutation = new List<int>();
 
       for (int i = 0; i < graph.size; ++i) {
-        int city;
-
-        do {
-          city = random.Next(graph.size);
-        } while(permutation.Contains(city));
-
-        permutation.Add(city);
+        permutation.Add(i);
       }
+
+      permutation = permutation.OrderBy(x => Guid.NewGuid()).ToList();
 
       return permutation;
     }
 
     /* 
       Get random adjacent permutation for the permutation
-      given in the parameter using k-swap algorithm.
+      given in the parameter using k-swap (with k = 1) algorithm.
     */
     private List<int> GetRandomAdjacentPermutation(List<int> permutation) {
       List<int> adjacentPermutation = new List<int>(permutation);
-      int k = 4;
-      List<int> cityIndexes = new List<int>();
 
-      // remove k random cities from graph
-      for (int i = 0; i < k; ++i) {
-        int city = random.Next(adjacentPermutation.Count);
+      int position = random.Next(adjacentPermutation.Count);
+      int newPosition = random.Next(adjacentPermutation.Count);
 
-        cityIndexes.Add(adjacentPermutation[city]);
-        adjacentPermutation.RemoveAt(city);
-      }
+      int city = adjacentPermutation[position];
 
-      // insert the cities back in a different random order
-      for (int i = 0; i < k; ++i) {
-        int newPosition = random.Next(adjacentPermutation.Count);
-
-        adjacentPermutation.Insert(newPosition, cityIndexes[i]);
-      }
+      adjacentPermutation.RemoveAt(position);
+      adjacentPermutation.Insert(newPosition, city);
 
       return adjacentPermutation;
-    }
-
-    
+    }    
   }
 }

@@ -1,16 +1,23 @@
 using System;
+using System.Diagnostics;
 
 namespace Algorithms {
   class NearestNeigbourAlgorithm : IAlgorithm {
     private Graph graph;
 
-    public void Start() {
-      Random random = new Random();
+    private static Random random = new Random();
 
+    public void LoadGraph(string path) {
+      graph = new Graph();
+
+      graph.Load(path, Algorithm.NNA);
+    }
+
+    public void Start(int iterationsNumber) {
       graph.cities.Add(random.Next(graph.size));
 
-      for (int i = 0; i < graph.size - 1; ++i) {
-        int city = graph.cities[i];
+      for (int j = 0; j < graph.size - 1; ++j) {
+        int city = graph.cities[j];
         int nearestCity = -1;
         int shortestPath = int.MaxValue;
 
@@ -25,14 +32,10 @@ namespace Algorithms {
 
         graph.cities.Add(nearestCity);
       }
-
-      graph.PrintShortestPath();
     }
 
-    public void LoadGraph(string path) {
-      graph = new Graph();
-
-      graph.Load(path, Algorithm.NNA);
+    public int GetBestSolution() {
+      return graph.GetShortestPath();
     }
   }
 }

@@ -13,5 +13,9 @@ namespace Algorithms {
 
       pheromonesConcentration = rho * pheromonesConcentration + tau;
     }
+
+    public void resetPheromonesConcentration() {
+      this.pheromonesConcentration = ACOParams.tau0;
+    }
   }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Algorithms {
   class AntColonyOptimization : IAlgorithm {
@@ -19,13 +20,19 @@ namespace Algorithms {
       }
     }
 
-    public void Start() {
-      for (int i = 0; i < ACOParams.iterationsNumber; ++i) {
+    public void Start(int iterationsNumber) {
+      for (int i = 0; i < iterationsNumber; ++i) {
         DoIteration();
         UpdatePheromonoesConcentration();
       }
 
-      graph.PrintShortestPath();
+      for (int i = 0; i < graph.size - 1; ++i) {
+        ((ACOEdge) graph.Edge(i, i + 1)).resetPheromonesConcentration();
+      }
+    }
+
+    public int GetBestSolution() {
+      return graph.GetShortestPath();
     }
 
     private void DoIteration() {

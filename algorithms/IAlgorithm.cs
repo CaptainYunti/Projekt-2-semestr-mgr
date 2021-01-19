@@ -1,6 +1,7 @@
 namespace Algorithms {
   interface IAlgorithm {
-    void Start();
     void LoadGraph(string path);
+    void Start(int iterationsNumber);
+    int GetBestSolution();
   }
 }

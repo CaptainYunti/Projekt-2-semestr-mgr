@@ -1,22 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Algorithms
 {
   class Program
   {
-    static void Main(string[] args)
-    {
-      List<IAlgorithm> algorithms = new List<IAlgorithm>();
+    private static void DoMeasurement(Algorithm algorithm,
+                                      int repetitionsNumber = 10,
+                                      int iterationsNumber = 1000) {
+      AlgorithmsManager algorithmsManager = new AlgorithmsManager();
 
-      algorithms.Add(new SimulatedAnnealingAlgorithm());
-      algorithms.Add(new AntColonyOptimization());
-      algorithms.Add(new GeneticAlgorithm());
-      algorithms.Add(new NearestNeigbourAlgorithm());
+      algorithmsManager.SetRepetitionsNumber(repetitionsNumber);
+      algorithmsManager.SetIterationsNumber(iterationsNumber);
 
-      foreach (var algorithm in algorithms) {
-        algorithm.LoadGraph("./graphs/tsp_15.txt");
-        algorithm.Start();
+      List<(string, string)> graphs = new List<(string, string)>();
+
+      foreach (string dirFile in Directory.GetDirectories("./graphs")) {
+        foreach (string fileName in Directory.GetFiles(dirFile)) {
+            graphs.Add((fileName.Split('\\')[2]
+                                .Split(".")[0]
+                                .Replace("tsp_", ""),
+                        fileName)); 
+        }
       }
+
+      algorithmsManager.DoMeasurement(algorithm, graphs);
+      algorithmsManager.SaveMeasurementToFile("./results/" +
+                                              algorithm + 
+                                              "-results.txt");
+    }
+
+    static void Main(string[] args)
+    {  
+      DoMeasurement(Algorithm.SAA, 10, 1000);
+      DoMeasurement(Algorithm.ACO, 10, 1);
+      DoMeasurement(Algorithm.GA, 10, 2500);
+      DoMeasurement(Algorithm.NNA);
     }
   }
 }
