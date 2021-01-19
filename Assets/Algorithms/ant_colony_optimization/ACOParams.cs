@@ -4,15 +4,15 @@ namespace Algorithms {
     public static double rho => 0.5;
     // parameter regulating the influence of pheromone
     // concentration on the selection of the next city
-    public static int alpha => 100;
+    public static double alpha => 0.5;
     // parameter regulating the influence of the local value of the criterion
     // function on the selection of the next city
-    public static int beta => 20;
+    public static int beta => 5;
     // initial concentration of pheromones
     public static double tau0 => 0.5;
     // number of pheromones spread over 1 edge
-    public static double q => 0.7;
+    public static double q => 1;
 
-    public static int iterationsNumber => 500;
+    public static int iterationsNumber => 1;
   }
 }

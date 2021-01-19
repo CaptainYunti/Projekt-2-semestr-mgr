@@ -14,6 +14,11 @@ namespace Algorithms {
             return graph.cities;
         }
 
+        public int ShortestPath()
+        {
+            return graph.CalculatePathDistance(graph.cities);
+        }
+
         public void LoadGraph(string path) {
       graph = new Graph();
 
@@ -48,5 +53,6 @@ namespace Algorithms {
                                                        distance);
       }
     }
-  }
+
+    }
 }

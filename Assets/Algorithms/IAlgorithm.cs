@@ -5,6 +5,8 @@ namespace Algorithms {
     void Start();
     void LoadGraph(string path);
 
+        int ShortestPath();
+
         List<int> GetCities();
   }
 }

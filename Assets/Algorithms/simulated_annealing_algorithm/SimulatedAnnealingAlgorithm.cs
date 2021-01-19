@@ -107,19 +107,24 @@ namespace Algorithms {
         {
             return graph.cities;
         }
-/*
-        private SimulatedAnnealingAlgorithm() { }
 
-        private static SimulatedAnnealingAlgorithm _instance;
-
-        public static SimulatedAnnealingAlgorithm GetInstance()
+        public int ShortestPath()
         {
-            if (_instance == null)
-            {
-                _instance = new SimulatedAnnealingAlgorithm();
-            }
-            return _instance;
+            return graph.CalculatePathDistance(graph.cities);
         }
-*/
+        /*
+                private SimulatedAnnealingAlgorithm() { }
+
+                private static SimulatedAnnealingAlgorithm _instance;
+
+                public static SimulatedAnnealingAlgorithm GetInstance()
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new SimulatedAnnealingAlgorithm();
+                    }
+                    return _instance;
+                }
+        */
     }
 }

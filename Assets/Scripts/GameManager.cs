@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
     int redNumber;
     int redCount;
     int rand;
+    [SerializeField]
+    bool turnOnAI;
+    GameObject player;
+    GameObject playerAI;
 
     // Start is called before the first frame update
     void Start()
@@ -33,9 +37,12 @@ public class GameManager : MonoBehaviour
             rend = buildings[rand].GetComponent<Renderer>();
             rend.sharedMaterial = materialRed;
             redBuildings.Add(buildings[rand]);
+            //print(buildings[rand]);
             redCount++;
 
         }
+
+        //redBuildings.Sort();
 
     }
 

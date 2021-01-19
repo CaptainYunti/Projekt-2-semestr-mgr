@@ -17,11 +17,14 @@ public class GenerateMatrix : MonoBehaviour
     {
         buildings = GameManager.buildings;
         numberRed = 0;
+
+        redBuildings = GameManager.redBuildings;
+
         foreach (GameObject build in buildings)
         {
             if (build.GetComponent<Renderer>().sharedMaterial.name == "Red")
             {
-                redBuildings.Add(build);
+                //redBuildings.Add(build);
                 numberRed++;
             }
 
@@ -71,6 +74,7 @@ public class GenerateMatrix : MonoBehaviour
             }
 
             matrix += "\n";
+            print(buildings[i].name);
         }
 
 

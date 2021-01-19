@@ -23,6 +23,7 @@ public class PlayerAI : MonoBehaviour
     int algorithmCount;
     int countRoad;
     int lenRed;
+    int length;
  
 
     // Start is called before the first frame update
@@ -40,12 +41,29 @@ public class PlayerAI : MonoBehaviour
 
         switchAlgorithm = false;
 
-        goodRoad = Algorithms.Program.SimulatedAnnealing();
+        goodRoad = Algorithms.Program.NearestNeighbour();
+        //goodRoad = Algorithms.Program.SimulatedAnnealing();
+
+        length = 0;
+        for(int i = 0; i < goodRoad.Count-1; i++)
+        {
+            length += (int)Vector3.Distance(redBuildings[goodRoad[i]].transform.position, redBuildings[goodRoad[i+1]].transform.position);
+        }
+        print("Czy zjebalismy: " + length);
+
         countRoad = 0;
         nextBuilding = goodRoad[countRoad++];
+
+        //nextBuilding = countRoad++;
+
         transform.position = redBuildings[nextBuilding].transform.position;
         redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
+
+
         nextBuilding = goodRoad[countRoad++];
+        //nextBuilding = countRoad++;
+        
+        
         ChangeBuilding(redBuildings[nextBuilding]);
         GetComponent<TrailRenderer>().enabled = true;
 
@@ -78,6 +96,9 @@ public class PlayerAI : MonoBehaviour
         {
             //print(redBuildings[nextBuilding]);
             nextBuilding = goodRoad[countRoad++];
+            //nextBuilding = countRoad++;
+
+
             ChangeBuilding(redBuildings[nextBuilding]);
         }
 
@@ -110,13 +131,14 @@ public class PlayerAI : MonoBehaviour
     {
 
         isBuildingReached = false;
-        print(building.name);
+        //print(building.name);
         //prevBuilding = nextBuilding;
 
     }
 
     public void NewAlgorithm()
     {
+
         redBuildings = copyRedBuildings;
 
         foreach(GameObject build in redBuildings)
@@ -125,7 +147,8 @@ public class PlayerAI : MonoBehaviour
         }
 
 
-        switch (algorithmCount)
+
+        /*switch (algorithmCount)
         {
             case 1:
                 goodRoad = Algorithms.Program.AntColony();
@@ -142,7 +165,13 @@ public class PlayerAI : MonoBehaviour
                 //print("No tak się nie da");
                 break;
         }
-
+        */
+        length = 0;
+        for (int i = 0; i < goodRoad.Count - 1; i++)
+        {
+            length += (int)Vector3.Distance(redBuildings[goodRoad[i]].transform.position, redBuildings[goodRoad[i + 1]].transform.position);
+        }
+        print("Czy zjebalismy: " + length);
 
         countRoad = 0;
         countRoad = 0;

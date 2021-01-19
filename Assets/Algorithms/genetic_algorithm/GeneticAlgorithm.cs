@@ -138,5 +138,10 @@ namespace Algorithms {
         {
             return graph.cities;
         }
+
+        public int ShortestPath()
+        {
+            return graph.CalculatePathDistance(graph.cities);
+        }
     }
 }

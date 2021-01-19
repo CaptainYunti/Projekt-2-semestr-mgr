@@ -67,6 +67,7 @@ namespace Algorithms
             //print("Ile miast: " + algorithms[0].GetCities().ToArray().Length); //dziala
             //print("Pierwsze miasto:" + algorithms[0].GetCities()[0]); //dziala
             //PlayerAI.roads[0] = algorithms[0].GetCities(); //nie dziala
+            print("Dlugosc: " + algorithms[0].ShortestPath());
             return algorithms[0].GetCities();
 
         }
@@ -77,6 +78,7 @@ namespace Algorithms
             algorithms[1].LoadGraph(graphPath);
             algorithms[1].Start();
             //PlayerAI.roads[1] = algorithms[1].GetCities();
+            print("Dlugosc: " + algorithms[1].ShortestPath());
             return algorithms[1].GetCities();
         }
 
@@ -86,6 +88,7 @@ namespace Algorithms
             algorithms[2].LoadGraph(graphPath);
             algorithms[2].Start();
             //PlayerAI.roads[2] = algorithms[2].GetCities();
+            print("Dlugosc: " + algorithms[2].ShortestPath());
             return algorithms[2].GetCities();
         }
 
@@ -95,6 +98,7 @@ namespace Algorithms
             algorithms[3].LoadGraph(graphPath);
             algorithms[3].Start();
             // PlayerAI.roads[3] = algorithms[1].GetCities();
+            print("Dlugosc: " + algorithms[3].ShortestPath());
             return algorithms[3].GetCities();
         }
 
