@@ -47,6 +47,7 @@ public class PlayerAI : MonoBehaviour
         redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
         nextBuilding = goodRoad[countRoad++];
         ChangeBuilding(redBuildings[nextBuilding]);
+        GetComponent<TrailRenderer>().enabled = true;
 
         algorithmCount++;
 
@@ -98,7 +99,7 @@ public class PlayerAI : MonoBehaviour
         if (other.gameObject == redBuildings[nextBuilding])
         {
             isBuildingReached = true;
-            print(redBuildings[nextBuilding]);
+            //print(redBuildings[nextBuilding]);
             redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
 
         }
@@ -109,7 +110,7 @@ public class PlayerAI : MonoBehaviour
     {
 
         isBuildingReached = false;
-        //print(building.name);
+        print(building.name);
         //prevBuilding = nextBuilding;
 
     }
@@ -142,11 +143,13 @@ public class PlayerAI : MonoBehaviour
                 break;
         }
 
+
         countRoad = 0;
         countRoad = 0;
         nextBuilding = goodRoad[countRoad++];
         transform.position = redBuildings[nextBuilding].transform.position;
         redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
+        GetComponent<TrailRenderer>().Clear();
         nextBuilding = goodRoad[countRoad++];
         ChangeBuilding(redBuildings[nextBuilding]);
         algorithmCount++;

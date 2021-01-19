@@ -10,6 +10,9 @@ public class PlayerMovement : MonoBehaviour
     float speed; // szyblość poruszanie
     [SerializeField]
     float rotationSpeed; //szybkość obrotu
+    List<GameObject> redBuildings;
+    [SerializeField]
+    Material green;
 
     Vector3 direction;
     Vector3 rotation;
@@ -17,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        redBuildings = GameManager.redBuildings;
     }
 
     // Update is called once per frame
@@ -53,5 +56,13 @@ public class PlayerMovement : MonoBehaviour
 
 
         transform.localPosition += direction * speed * Time.deltaTime;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(redBuildings.Contains(other.gameObject))
+        {
+            other.gameObject.GetComponent<Renderer>().sharedMaterial = green;
+        }
     }
 }
