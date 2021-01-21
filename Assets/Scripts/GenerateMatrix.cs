@@ -46,12 +46,12 @@ public class GenerateMatrix : MonoBehaviour
     {
         string matrix = MakeMatrix(buildings, number);
         string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
-        string path = Application.dataPath;
+        string path = Application.dataPath + "/";
         path += name + ".txt";
         File.WriteAllText(path, matrix);
         print(path);
 
-        Program.graphPath = path;
+        //Program.graphPath = path;
 
         return path;
 
