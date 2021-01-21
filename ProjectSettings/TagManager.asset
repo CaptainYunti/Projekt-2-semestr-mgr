@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Building
   - Player AI
+  - Text Score
+  - Algorithm Name
+  - Minimap
   layers:
   - Default
   - TransparentFX

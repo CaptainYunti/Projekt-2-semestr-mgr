@@ -12,6 +12,7 @@ public class GenerateMatrix : MonoBehaviour
     int numberRed;
     string path;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,14 +35,18 @@ public class GenerateMatrix : MonoBehaviour
 
         Algorithms.Program.graphPath = path;
 
+
+
     }
+
+
 
 
     string SaveMatrixToFile(List<GameObject> buildings, int number)
     {
         string matrix = MakeMatrix(buildings, number);
         string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
-        string path = Application.dataPath + "/Algorithms/graphs/";
+        string path = Application.dataPath;
         path += name + ".txt";
         File.WriteAllText(path, matrix);
         print(path);

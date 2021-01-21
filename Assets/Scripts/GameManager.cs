@@ -10,21 +10,31 @@ public class GameManager : MonoBehaviour
     public static List<GameObject> redBuildings;
     public Material materialRed;
     [SerializeField]
-    int redNumber;
+    public static int redNumber;
     int redCount;
     int rand;
     [SerializeField]
     bool turnOnAI;
     GameObject player;
     GameObject playerAI;
+    Camera cameraSky;
+    Camera cameraPlayer;
+    Camera cameraMinimap;
+    Camera[] cameras;
+    GameObject miniMap;
+    Camera cameraHuman;
+    public static bool humanActive;
+    public static bool playerReady;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerReady = false;
         redCount = 0;
         buildings = GameObject.FindGameObjectsWithTag("Building");
         int numberBuildings = buildings.Length-1;
         redBuildings = new List<GameObject>();
+
 
         while(redCount < redNumber)
         {
@@ -42,8 +52,59 @@ public class GameManager : MonoBehaviour
 
         }
 
+        cameras = Camera.allCameras;
+
+        foreach (Camera camera in cameras)
+        {
+            if (camera.name == "Camera Player AI" && !humanActive)
+                cameraPlayer = camera;
+            if (camera.name == "Camera Player" && humanActive)
+                cameraPlayer = camera;
+            if (camera.name == "Camera Sky")
+                cameraSky = camera;
+            if (camera.name == "Camera Minimap")
+                cameraMinimap = camera;
+        }
+
+        foreach (Camera camera in cameras)
+        {
+            camera.enabled = false;
+        }
+        cameraSky.enabled = true;
+
+        miniMap = GameObject.FindGameObjectWithTag("Minimap");
+
         //redBuildings.Sort();
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown("1"))
+        {
+            foreach (Camera camera in cameras)
+            {
+                camera.enabled = false;
+            }
+            miniMap.SetActive(true);
+            cameraPlayer.enabled = true;
+            cameraMinimap.enabled = true;
+        }
+
+        if (Input.GetKeyDown("2"))
+        {
+            foreach (Camera camera in cameras)
+            {
+                camera.enabled = false;
+            }
+            cameraSky.enabled = true;
+            miniMap.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
 }

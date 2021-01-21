@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 using Algorithms;
 
@@ -24,6 +25,10 @@ public class PlayerAI : MonoBehaviour
     int countRoad;
     int lenRed;
     int length;
+    GameObject[] textScoresTime;
+    GameObject[] textAlgorithm;
+    Text actualTextScore;
+    bool countTime;
  
 
     // Start is called before the first frame update
@@ -32,6 +37,14 @@ public class PlayerAI : MonoBehaviour
 
         buildings = GameManager.buildings;
 
+        //textScoresTime = GameObject.FindGameObjectsWithTag("Text Score");
+        textScoresTime = new GameObject[4];
+        textScoresTime[0] = GameObject.Find("Text Score Annealing");
+        textScoresTime[1] = GameObject.Find("Text Score Ants");
+        textScoresTime[2] = GameObject.Find("Text Score Genetic");
+        textScoresTime[3] = GameObject.Find("Text Score Neighbour");
+        textAlgorithm = GameObject.FindGameObjectsWithTag("Algorithm Name");
+
         algorithmCount = 0;
 
         redBuildings = GameManager.redBuildings;
@@ -39,35 +52,10 @@ public class PlayerAI : MonoBehaviour
         copyRedBuildings = redBuildings;
         copyRedBuildings = redBuildings;
 
-        switchAlgorithm = false;
+        switchAlgorithm = true;
 
-        goodRoad = Algorithms.Program.NearestNeighbour();
-        //goodRoad = Algorithms.Program.SimulatedAnnealing();
-
-        length = 0;
-        for(int i = 0; i < goodRoad.Count-1; i++)
-        {
-            length += (int)Vector3.Distance(redBuildings[goodRoad[i]].transform.position, redBuildings[goodRoad[i+1]].transform.position);
-        }
-        print("Czy zjebalismy: " + length);
-
-        countRoad = 0;
-        nextBuilding = goodRoad[countRoad++];
-
-        //nextBuilding = countRoad++;
-
-        transform.position = redBuildings[nextBuilding].transform.position;
-        redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
-
-
-        nextBuilding = goodRoad[countRoad++];
-        //nextBuilding = countRoad++;
-        
-        
-        ChangeBuilding(redBuildings[nextBuilding]);
-        GetComponent<TrailRenderer>().enabled = true;
-
-        algorithmCount++;
+        NewAlgorithm();
+        countTime = true;
 
     }
 
@@ -104,6 +92,9 @@ public class PlayerAI : MonoBehaviour
 
         transform.LookAt(redBuildings[nextBuilding].transform);
 
+        if(countTime)
+            actualTextScore.text = Timer.GetTime();
+
     }
 
     void Move()
@@ -139,6 +130,8 @@ public class PlayerAI : MonoBehaviour
     public void NewAlgorithm()
     {
 
+        Timer.ResetTime();
+
         redBuildings = copyRedBuildings;
 
         foreach(GameObject build in redBuildings)
@@ -148,24 +141,31 @@ public class PlayerAI : MonoBehaviour
 
 
 
-        /*switch (algorithmCount)
+        switch (algorithmCount)
         {
+            case 0:
+                goodRoad = Algorithms.Program.SimulatedAnnealing();
+                actualTextScore = textScoresTime[0].GetComponent<Text>();
+                break;
             case 1:
                 goodRoad = Algorithms.Program.AntColony();
+                actualTextScore = textScoresTime[1].GetComponent<Text>();
                 break;
             case 2:
                 goodRoad = Algorithms.Program.GeneticAlgorithm();
+                actualTextScore = textScoresTime[2].GetComponent<Text>();
                 //print("Genetic" + goodRoad.ToString());
                 break;
             case 3:
                 goodRoad = Algorithms.Program.NearestNeighbour();
+                actualTextScore = textScoresTime[3].GetComponent<Text>();
                 //print("Nearest" + goodRoad.ToString());
                 break;
             default:
                 //print("No tak się nie da");
                 break;
         }
-        */
+        
         length = 0;
         for (int i = 0; i < goodRoad.Count - 1; i++)
         {
@@ -179,7 +179,14 @@ public class PlayerAI : MonoBehaviour
         transform.position = redBuildings[nextBuilding].transform.position;
         redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
         GetComponent<TrailRenderer>().Clear();
+        GetComponent<TrailRenderer>().enabled = true;
         nextBuilding = goodRoad[countRoad++];
+        if(algorithmCount > textScoresTime.Length-1)
+        {
+            countTime = false;
+        }
+
+
         ChangeBuilding(redBuildings[nextBuilding]);
         algorithmCount++;
         
