@@ -1,19 +1,25 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace Algorithms {
-  class Graph{
-    public int size { get; set; }
-    public IEdge[,] edges { get; set; }
-    public List<int> cities { get; set; }
+namespace Algorithms
+{
+    class Graph
+    {
+        public int size { get; set; }
+        public IEdge[,] edges { get; set; }
 
-    public Graph() {
-      this.cities = new List<int>();
-    }
+        public List<int> cities { get; set; }
+
+        private Algorithm algorithm;
+
+        public Graph()
+        {
+
+        }
 
         public void Load(string path, Algorithm algorithm)
         {
+            this.algorithm = algorithm;
 
             System.IO.StreamReader file = new System.IO.StreamReader(path);
 
@@ -35,7 +41,8 @@ namespace Algorithms {
                     edges = new NNEdge[size, size];
                     break;
                 default:
-                    break;
+                    throw new ArgumentException(message: "invalid enum value",
+                                                paramName: nameof(algorithm));
             }
 
             int rowCounter = 0;
@@ -51,6 +58,7 @@ namespace Algorithms {
                     {
                         continue;
                     }
+
                     switch (algorithm)
                     {
                         case Algorithm.ACO:
@@ -75,45 +83,69 @@ namespace Algorithms {
             }
         }
 
-        public void Print() {
-      for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < size; ++j) {
-          System.Console.Write(edges[i, j].distance + " ");
+        public void Print()
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                for (int j = 0; j < size; ++j)
+                {
+                    System.Console.Write(edges[i, j].distance + " ");
+                }
+                System.Console.WriteLine();
+            }
         }
-        System.Console.WriteLine();
-      }
+
+        public void PrintShortestPath()
+        {
+            System.Console.WriteLine("Algorithm: " + algorithm.ToString());
+            System.Console.WriteLine("Visited cities:");
+            System.Console.Write(cities[0]);
+
+            for (int i = 1; i < cities.Count; ++i)
+            {
+                System.Console.Write(" -> " + cities[i]);
+            }
+
+            int pathDistance = CalculatePathDistance(cities);
+
+            System.Console.WriteLine("\nPath length: " + pathDistance);
+        }
+
+        public void printAlgorithm()
+        {
+            System.Console.WriteLine("Algorithm: " + algorithm.ToString());
+        }
+
+        public int GetShortestPath()
+        {
+            return CalculatePathDistance(cities);
+        }
+
+        public IEdge Edge(int i, int j)
+        {
+            return edges[i, j];
+        }
+
+        public int CalculatePathDistance(List<int> permutation)
+        {
+            if (permutation.Count == 0)
+            {
+                return int.MaxValue;
+            }
+
+            int distance = 0;
+
+            for (int i = 0; i < size - 1; ++i)
+            {
+                distance += Edge(permutation[i], permutation[i + 1]).distance;
+            }
+
+            return distance;
+        }
+
+        public void ClearCities()
+        {
+            cities.Clear();
+        }
     }
-
-    public void PrintShortestPath() {
-
-      System.Console.WriteLine("Visited cities:");
-      System.Console.Write(cities[0]);
-
-      for (int i = 1; i < cities.Count; ++i) {
-        System.Console.Write(" -> " + cities[i]);
-      }
-
-      int pathDistance = CalculatePathDistance(cities);
-
-      System.Console.WriteLine("\nPath length: " + pathDistance + "\n");
-    }
-
-    public IEdge Edge(int i, int j) {
-      return edges[i, j];
-    }
-
-    public int CalculatePathDistance(List<int> permutation) {
-      if (permutation.Count == 0) {
-        return int.MaxValue;
-      }
-
-      int distance = 0;
-
-      for (int i = 0; i < size - 1; ++i) {
-        distance += Edge(permutation[i], permutation[i + 1]).distance;
-      }
-
-      return distance;
-    }
-  }
 }

@@ -1,40 +1,52 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Algorithms {
-  class NearestNeigbourAlgorithm : IAlgorithm {
-    private Graph graph;
+namespace Algorithms
+{
+    class NearestNeigbourAlgorithm : IAlgorithm
+    {
+        private Graph graph;
 
-    public void Start() {
-      Random random = new Random();
+        private static Random random = new Random();
 
-      graph.cities.Add(random.Next(graph.size));
+        public void LoadGraph(string path)
+        {
+            graph = new Graph();
 
-      for (int i = 0; i < graph.size - 1; ++i) {
-        int city = graph.cities[i];
-        int nearestCity = -1;
-        int shortestPath = int.MaxValue;
-
-        for (int currentCity = 0; currentCity < graph.size; ++currentCity) {
-          if (!graph.cities.Contains(currentCity)) {
-            if (shortestPath > graph.Edge(city, currentCity).distance) {
-              shortestPath = graph.Edge(city, currentCity).distance;
-              nearestCity = currentCity;
-            }
-          }
+            graph.Load(path, Algorithm.NNA);
         }
 
-        graph.cities.Add(nearestCity);
-      }
+        public void Start(int iterationsNumber)
+        {
+            graph.cities.Add(random.Next(graph.size));
 
-      graph.PrintShortestPath();
-    }
+            for (int j = 0; j < graph.size - 1; ++j)
+            {
+                int city = graph.cities[j];
+                int nearestCity = -1;
+                int shortestPath = int.MaxValue;
 
-    public void LoadGraph(string path) {
-      graph = new Graph();
+                for (int currentCity = 0; currentCity < graph.size; ++currentCity)
+                {
+                    if (!graph.cities.Contains(currentCity))
+                    {
+                        if (shortestPath > graph.Edge(city, currentCity).distance)
+                        {
+                            shortestPath = graph.Edge(city, currentCity).distance;
+                            nearestCity = currentCity;
+                        }
+                    }
+                }
 
-      graph.Load(path, Algorithm.NNA);
-    }
+                graph.cities.Add(nearestCity);
+            }
+        }
+
+        public int GetBestSolution()
+        {
+            return graph.GetShortestPath();
+        }
 
         public List<int> GetCities()
         {
@@ -47,3 +59,4 @@ namespace Algorithms {
         }
     }
 }
+

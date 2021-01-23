@@ -79,7 +79,7 @@ public class GenerateMatrix : MonoBehaviour
             }
 
             matrix += "\n";
-            print(buildings[i].name);
+            //print(buildings[i].name);
         }
 
 

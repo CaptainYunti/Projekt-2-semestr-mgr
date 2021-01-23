@@ -63,7 +63,7 @@ namespace Algorithms
 
             print("Wyżarzanie");
             algorithms[0].LoadGraph(graphPath);
-            algorithms[0].Start();
+            algorithms[0].Start(1000);
             //print("Ile miast: " + algorithms[0].GetCities().ToArray().Length); //dziala
             //print("Pierwsze miasto:" + algorithms[0].GetCities()[0]); //dziala
             //PlayerAI.roads[0] = algorithms[0].GetCities(); //nie dziala
@@ -76,7 +76,7 @@ namespace Algorithms
         {
             print("Mrówki");
             algorithms[1].LoadGraph(graphPath);
-            algorithms[1].Start();
+            algorithms[1].Start(1);
             //PlayerAI.roads[1] = algorithms[1].GetCities();
             print("Dlugosc: " + algorithms[1].ShortestPath());
             return algorithms[1].GetCities();
@@ -86,7 +86,7 @@ namespace Algorithms
         {
             print("Genetyczny");
             algorithms[2].LoadGraph(graphPath);
-            algorithms[2].Start();
+            algorithms[2].Start(1000);
             //PlayerAI.roads[2] = algorithms[2].GetCities();
             print("Dlugosc: " + algorithms[2].ShortestPath());
             return algorithms[2].GetCities();
@@ -96,7 +96,7 @@ namespace Algorithms
         {
             print("Sąsiad");
             algorithms[3].LoadGraph(graphPath);
-            algorithms[3].Start();
+            algorithms[3].Start(1);
             // PlayerAI.roads[3] = algorithms[1].GetCities();
             print("Dlugosc: " + algorithms[3].ShortestPath());
             return algorithms[3].GetCities();

@@ -2,8 +2,9 @@ using System.Collections.Generic;
 
 namespace Algorithms {
   interface IAlgorithm {
-    void Start();
-    void LoadGraph(string path);
+        void LoadGraph(string path);
+        void Start(int iterationsNumber);
+        int GetBestSolution();
 
         int ShortestPath();
 

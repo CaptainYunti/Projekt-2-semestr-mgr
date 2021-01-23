@@ -1,138 +1,175 @@
 using System;
 using System.Collections.Generic;
 
-namespace Algorithms {
-  public class GeneticAlgorithm : IAlgorithm {
-    private Graph graph;
-    private List<List<int>> permutations;
-    private static Random random = new Random();
+namespace Algorithms
+{
+    public class GeneticAlgorithm : IAlgorithm
+    {
+        private Graph graph;
+        private Population population;
 
-    public void Start() {
-      GenerateStartPermutations();
+        private static Random random = new Random();
 
-      for (int i = 0; i < GAParams.iterationsNumber; ++i) {
-        CrossPermutation();
-        MutatePermutation();
-        SortPermutations();
-        SelectBestPermutations();
+        public void LoadGraph(string path)
+        {
+            graph = new Graph();
 
-        if (graph.CalculatePathDistance(graph.cities) > 
-            graph.CalculatePathDistance(permutations[0])) {
-          graph.cities = permutations[0];
-        }
-      }
-
-      graph.PrintShortestPath();
-    }
-
-    public void LoadGraph(string path) {
-      graph = new Graph();
-
-      graph.Load(path, Algorithm.GA);
-    }
-
-    private void CrossPermutation() {
-      for (int i = 0; i < permutations.Count; ++i) {
-        if (random.NextDouble() > GAParams.pk) {
-          continue;
+            graph.Load(path, Algorithm.GA);
         }
 
-        int permutationNum1 = random.Next(permutations.Count);
-        int permutationNum2;
+        public void Start(int iterationsNumber)
+        {
+            population = new Population(graph.size);
 
-        List<int> newPermutation = new List<int>();
+            population.GenerateSpecimens(GAParams.populationSize);
 
-        while ((permutationNum2 = random.Next(permutations.Count)) ==
-               permutationNum1);
+            for (int j = 0; j < iterationsNumber; ++j)
+            {
+                CrossAllSpecimens();
+                MutateAllSpecimens();
+                SelectBestSpecimens();
 
-        for (int j = 0; j < permutations[permutationNum1].Count / 2; ++j) {
-          newPermutation.Add(permutations[permutationNum1][j]);
+                if (graph.CalculatePathDistance(graph.cities) >
+                    graph.CalculatePathDistance(population.GetSpecimen(0).chromosomes))
+                {
+                    graph.cities = population.GetSpecimen(0).chromosomes;
+                }
+            }
         }
 
-        for (int j = 0; j < permutations[permutationNum2].Count; ++j) {
-          if (!newPermutation.Contains(permutations[permutationNum2][j])) {
-            newPermutation.Add(permutations[permutationNum2][j]);
-          }
+        public int GetBestSolution()
+        {
+            return graph.GetShortestPath();
         }
 
-        permutations.Add(newPermutation);
-      }
-    }
+        private (Specimen, Specimen) CrossSpecimens(Specimen specimen1,
+                                                    Specimen specimen2)
+        {
 
-    private void MutatePermutation() {
-      List<int> mutatedPermutations = new List<int>();
+            Specimen newSpecimen1 = new Specimen(graph.size);
+            Specimen newSpecimen2 = new Specimen(graph.size);
 
-      for (int i = 0; i < permutations.Count; ++i) {
-        if (random.NextDouble() > GAParams.pm) {
-          continue;
+            int k1 = random.Next(graph.size);
+            int k2 = random.Next(graph.size);
+
+            if (k2 < k1)
+            {
+                Swap(ref k1, ref k2);
+            }
+
+            for (int j = k1; j <= k2; ++j)
+            {
+                newSpecimen1.SetGen(j, specimen2.GetGen(j));
+                newSpecimen2.SetGen(j, specimen1.GetGen(j));
+            }
+
+            int oldGenIndex = k2 + 1;
+            int newSpecimen1GenIndex = k2 + 1;
+            int newSpecimen2GenIndex = k2 + 1;
+
+            for (int j = 0; j < graph.size; ++j)
+            {
+                oldGenIndex = (oldGenIndex >= graph.size) ? 0 : oldGenIndex;
+                newSpecimen1GenIndex =
+                  (newSpecimen1GenIndex >= graph.size) ? 0 : newSpecimen1GenIndex;
+                newSpecimen2GenIndex =
+                  (newSpecimen2GenIndex >= graph.size) ? 0 : newSpecimen2GenIndex;
+
+                if (!newSpecimen1.ContainsGen(specimen1.GetGen(oldGenIndex)))
+                {
+                    newSpecimen1.SetGen(newSpecimen1GenIndex++,
+                                        specimen1.GetGen(oldGenIndex));
+                }
+
+                if (!newSpecimen2.ContainsGen(specimen2.GetGen(oldGenIndex)))
+                {
+                    newSpecimen2.SetGen(newSpecimen2GenIndex++,
+                                        specimen2.GetGen(oldGenIndex));
+                }
+
+                oldGenIndex++;
+            }
+
+            return (newSpecimen1, newSpecimen2);
         }
 
-        int permutationNum;
+        private void CrossAllSpecimens()
+        {
+            for (int i = 0; i < GAParams.populationSize; ++i)
+            {
+                if (random.NextDouble() > GAParams.pk)
+                {
+                    continue;
+                }
 
-        do {
-          permutationNum = random.Next(permutations.Count);
-        } while (mutatedPermutations.Contains(permutationNum));
+                Specimen specimen1 = population.GetRandomSpecimen();
+                Specimen specimen2 = population.GetRandomSpecimen();
 
-        mutatedPermutations.Add(permutationNum);
+                (Specimen, Specimen) newSpecimens =
+                  CrossSpecimens(specimen1, specimen2);
 
-        int city1ToSwap = random.Next(permutations[permutationNum].Count);
-        int city2ToSwap;
-
-        while ((city2ToSwap = random.Next(permutations[permutationNum].Count)) ==
-               city1ToSwap);
-
-        int temp = permutations[permutationNum][city1ToSwap];
-
-        permutations[permutationNum][city1ToSwap] = 
-          permutations[permutationNum][city2ToSwap];
-        permutations[permutationNum][city2ToSwap] = temp;
-      }
-    }
-
-    private void SortPermutations() {
-      List<(int, int)> ranking = new List<(int, int)>();
-
-      for (int i = 0; i < permutations.Count; ++i) {
-        ranking.Add((i, graph.CalculatePathDistance(permutations[i])));
-      }
-
-      ranking.Sort((permutation1, permutation2) => 
-        permutation1.Item2.CompareTo(permutation2.Item2));
-
-      List<List<int>> sortedPermutations = new List<List<int>>();
-
-      for (int i = 0; i < permutations.Count; ++i) {
-        sortedPermutations.Add(permutations[ranking[i].Item1]);
-      }
-
-      permutations = sortedPermutations;
-    }
-
-    private void SelectBestPermutations() {
-      while (permutations.Count > GAParams.populationSize) {
-        permutations.RemoveAt(permutations.Count - 1);
-      }
-    }
-
-    private void GenerateStartPermutations() {
-      permutations = new List<List<int>>();
-
-      for (int i = 0; i < GAParams.populationSize; ++i) {
-        permutations.Add(new List<int>());
-
-        permutations[i].Add(0);
-
-        while (permutations[i].Count != graph.size) {
-          int city;
-
-          do {
-            city = random.Next(graph.size);
-          } while(permutations[i].Contains(city));
-
-          permutations[i].Add(city);
+                population.Add(newSpecimens.Item1);
+                population.Add(newSpecimens.Item2);
+            }
         }
-      }
-    }
+
+        private void MutateSpecimen(ref Specimen specimen)
+        {
+            int k1 = random.Next(graph.size);
+            int k2 = random.Next(graph.size);
+
+            if (k2 < k1)
+            {
+                Swap(ref k1, ref k2);
+            }
+
+            List<int> subChromosome = new List<int>();
+
+            for (int i = k2; i > k1; --i)
+            {
+                subChromosome.Add(specimen.GetGen(i));
+            }
+
+            int genIndex = 0;
+
+            for (int i = k1 + 1; i <= k2; ++i)
+            {
+                specimen.SetGen(i, subChromosome[genIndex++]);
+            }
+        }
+
+        private void MutateAllSpecimens()
+        {
+            for (int i = 0; i < population.GetSize(); ++i)
+            {
+                if (random.NextDouble() > GAParams.pm)
+                {
+                    continue;
+                }
+
+                Specimen specimen = population.GetSpecimen(i);
+
+                MutateSpecimen(ref specimen);
+            }
+        }
+
+        private void SelectBestSpecimens()
+        {
+            population.Sort(graph);
+
+            while (population.GetSize() > GAParams.populationSize)
+            {
+                population.RemoveLastSpecimen();
+            }
+        }
+
+        private void Swap(ref int a, ref int b)
+        {
+            int temp = a;
+
+            a = b;
+            b = temp;
+        }
 
         public List<int> GetCities()
         {
@@ -145,3 +182,6 @@ namespace Algorithms {
         }
     }
 }
+
+
+
