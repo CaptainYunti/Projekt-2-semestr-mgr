@@ -11,6 +11,7 @@ public class GenerateMatrix : MonoBehaviour
     public List<GameObject> redBuildings;
     int numberRed;
     string path;
+    public static string partialPath;
 
 
     // Start is called before the first frame update
@@ -47,7 +48,9 @@ public class GenerateMatrix : MonoBehaviour
         string matrix = MakeMatrix(buildings, number);
         string name = "tsp_" + number.ToString() + "_" + Random.Range(0, 1000).ToString();
         string path = Application.dataPath + "/";
-        path += name + ".txt";
+        path += name;
+        partialPath = path + "_";
+        path += ".txt";
         File.WriteAllText(path, matrix);
         print(path);
 

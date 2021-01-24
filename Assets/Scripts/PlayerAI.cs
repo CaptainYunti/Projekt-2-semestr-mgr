@@ -29,6 +29,9 @@ public class PlayerAI : MonoBehaviour
     GameObject[] textAlgorithm;
     Text actualTextScore;
     bool countTime;
+    string path;
+    string[] picturesNames;
+    bool pictureTaken;
  
 
     // Start is called before the first frame update
@@ -54,8 +57,13 @@ public class PlayerAI : MonoBehaviour
 
         switchAlgorithm = true;
 
+        path = GenerateMatrix.partialPath;
+        picturesNames = new string[] { "wyzarzanie.png", "mrowki.png", "genetyk.png", "sasiad.png"};
+
         NewAlgorithm();
         countTime = true;
+
+        pictureTaken = false;
 
     }
 
@@ -64,12 +72,15 @@ public class PlayerAI : MonoBehaviour
     void Update()
     {
 
+
         switchAlgorithm = ShouldSwitchAlgorithm();
 
         if (switchAlgorithm)
         {
+ 
             NewAlgorithm();
             switchAlgorithm = false;
+            pictureTaken = false;
         }
 
 
@@ -97,6 +108,22 @@ public class PlayerAI : MonoBehaviour
 
     }
 
+    private void LateUpdate()
+    {
+        if (algorithmCount - 1 < picturesNames.Length && !pictureTaken && nextBuilding == goodRoad[goodRoad.Count - 1])
+        {
+            int distance = (int)Vector3.Distance(transform.position, redBuildings[goodRoad[goodRoad.Count - 1]].transform.position);
+            if(distance < 10)
+            {
+                ScreenCapture.CaptureScreenshot(path + picturesNames[algorithmCount - 1]);
+                pictureTaken = true;
+            }
+
+
+        }
+
+    }
+
     void Move()
     {
         direction = Vector3.zero;
@@ -113,6 +140,8 @@ public class PlayerAI : MonoBehaviour
             isBuildingReached = true;
             //print(redBuildings[nextBuilding]);
             redBuildings[nextBuilding].GetComponent<Renderer>().sharedMaterial = buildingGreen;
+
+
 
         }
   
@@ -200,7 +229,9 @@ public class PlayerAI : MonoBehaviour
                 return false;
         }
 
+
         return true;
     }
+
 
 }
