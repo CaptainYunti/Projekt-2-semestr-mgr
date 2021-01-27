@@ -195,12 +195,14 @@ public class PlayerAI : MonoBehaviour
                 break;
         }
         
+        /*
         length = 0;
         for (int i = 0; i < goodRoad.Count - 1; i++)
         {
             length += (int)Vector3.Distance(redBuildings[goodRoad[i]].transform.position, redBuildings[goodRoad[i + 1]].transform.position);
         }
-        print("Czy zjebalismy: " + length);
+        print("Droga rzeczywista: " + length);
+        */
 
         countRoad = 0;
         countRoad = 0;

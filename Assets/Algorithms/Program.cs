@@ -17,9 +17,7 @@ namespace Algorithms
 
         void Start()
         {
-            //alg = SimulatedAnnealingAlgorithm.GetInstance();
             algorithms = new List<IAlgorithm>();
-            //alg = ScriptableObject.CreateInstance();
             algorithms.Add(new SimulatedAnnealingAlgorithm());
             algorithms.Add(new AntColonyOptimization());
             algorithms.Add(new GeneticAlgorithm());
@@ -27,22 +25,6 @@ namespace Algorithms
 
             playerAI = GameObject.FindGameObjectWithTag("Player AI");
 
-
-            /*
-            print("Wyżarzanie");
-            SimulatedAnnealing();
-            print("Mrówki");
-            AntColony();
-            print("Genetyczny");
-            GeneticAlgorithm();
-            print("Sąsiad");
-            NearestNeighbour();
-            */
-
-            //playerAI.GetComponent<PlayerAI>().enabled = true;
-            //PlayerAI.areAlgorithmsCompute = false;
-            //count = 0;
-            //numberAlgorithm = 4;
 
             print(graphPath);
 
@@ -57,16 +39,10 @@ namespace Algorithms
 
         public static List<int> SimulatedAnnealing()
         {
-            //SimulatedAnnealingAlgorithm.LoadGraph(graphPath);
-            //SimulatedAnnealingAlgorithm.Start();
-            //return SimulatedAnnealingAlgorithm.GetCities();
 
             print("Wyżarzanie");
             algorithms[0].LoadGraph(graphPath);
             algorithms[0].Start(1000);
-            //print("Ile miast: " + algorithms[0].GetCities().ToArray().Length); //dziala
-            //print("Pierwsze miasto:" + algorithms[0].GetCities()[0]); //dziala
-            //PlayerAI.roads[0] = algorithms[0].GetCities(); //nie dziala
             print("Dlugosc: " + algorithms[0].ShortestPath());
             return algorithms[0].GetCities();
 
